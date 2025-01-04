@@ -10,5 +10,5 @@ tee setenvs.sh <<EOF
 export ELASTIC_API_KEY="<your elastic api key>"
 EOF
 
-. setenv.sh
+. setenvs.sh
 ```
