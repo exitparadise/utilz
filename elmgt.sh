@@ -7,6 +7,16 @@ POSITIONAL_ARGS=()
 
 while [[ $# -gt 0 ]]; do
   case $1 in
+    -h|--help)
+      echo "  "
+      echo "  mgmt.sh <action> [-o host] [-p] [-h] [host]"
+      echo "     <action>	one of: nodes, shards, recovery, indices, drain, undrain"
+      echo "     -o 		direct call to [host]"
+      echo "     -p 		pretty"
+      echo "     [host]		when action is drain, specify host to drain"
+      echo " "
+      exit 1
+      ;;
     -o|--host)
       HOST="$2"
       shift # past argument
@@ -65,20 +75,19 @@ case "${VERB}" in
         ;;
     "nodes")
         LOC='_cat/nodes'
-        curl -k -XGET https://${HOST}:9200/${LOC}${AUGMENT} -H "Authorization: ApiKey ${APIKEY}"
+        curl -sk -XGET https://${HOST}:9200/${LOC}${AUGMENT} -H "Authorization: ApiKey ${APIKEY}"
         ;;    
     "shards")
         LOC='_cat/shards'
-        echo curl -k -XGET https://${HOST}:9200/${LOC}${AUGMENT} -H "Authorization: ApiKey ${APIKEY}"
-        curl -k -XGET https://${HOST}:9200/${LOC}${AUGMENT} -H "Authorization: ApiKey ${APIKEY}"
+        curl -sk -XGET https://${HOST}:9200/${LOC}${AUGMENT} -H "Authorization: ApiKey ${APIKEY}"
         ;;
     "health")
         LOC='_cluster/health?pretty'
-        curl -k -XGET https://${HOST}:9200/${LOC}${AUGMENT} -H "Authorization: ApiKey ${APIKEY}"
+        curl -sk -XGET https://${HOST}:9200/${LOC}${AUGMENT} -H "Authorization: ApiKey ${APIKEY}"
         ;;
     "recovery")
         LOC='_cat/recovery?v'
-        curl -k -XGET https://${HOST}:9200/${LOC}${AUGMENT} -H "Authorization: ApiKey ${APIKEY}"
+        curl -sk -XGET https://${HOST}:9200/${LOC}${AUGMENT} -H "Authorization: ApiKey ${APIKEY}"
         ;;
     *)
         echo "${VERB} is not a valid command" 
