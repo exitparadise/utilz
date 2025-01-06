@@ -39,37 +39,36 @@ AUGMENTS={
          }
 
 if args.host:
-  EL_HOST = args.host
+    EL_HOST = args.host
 else:
-  EL_HOST = DEFAULT_HOST
+    EL_HOST = DEFAULT_HOST
 
 if ACTION not in elastic_actions.keys():
-  print ('action \'{}\' not a valid action'.format(ACTION))
+    print ('action \'{}\' not a valid action'.format(ACTION))
 else: 
-  if args.pretty:
-    AUGMENT=AUGMENTS[ACTION]
-  else: 
-    AUGMENT=''
+    if args.pretty:
+        AUGMENT=AUGMENTS[ACTION]
+    else: 
+        AUGMENT=''
 
-  response = io.BytesIO()
-  c = pycurl.Curl()
+    response = io.BytesIO()
+    c = pycurl.Curl()
 
-  if ACTION in ('drain', 'undrain'):
-    if ACTION == 'undrain':
-      args.target = ''
-    data = json.dumps({ "persistent": { "cluster.routing.allocation.exclude._name": args.target } })
-    c.setopt(pycurl.CUSTOMREQUEST, "PUT")
-    c.setopt(pycurl.POSTFIELDS, data)
+    if ACTION in ('drain', 'undrain'):
+        if ACTION == 'undrain':
+            args.target = ''
+        data = json.dumps({ "persistent": { "cluster.routing.allocation.exclude._name": args.target } })
+        c.setopt(pycurl.CUSTOMREQUEST, "PUT")
+        c.setopt(pycurl.POSTFIELDS, data)
 
-  c.setopt(pycurl.SSL_VERIFYPEER, 0)
-  c.setopt(pycurl.SSL_VERIFYHOST, 0)
-  c.setopt(c.HTTPHEADER, ['Content-Type: application/json', 'Authorization: ApiKey {}'.format(API_KEY)])
-  c.setopt(c.URL, 'https://{}:9200/{}{}'.format(EL_HOST,elastic_actions[ACTION],AUGMENT))
-  c.setopt(c.WRITEFUNCTION, response.write)
-  #c.setopt(c.POSTFIELDS, '@request.json')
+    c.setopt(pycurl.SSL_VERIFYPEER, 0)
+    c.setopt(pycurl.SSL_VERIFYHOST, 0)
+    c.setopt(c.HTTPHEADER, ['Content-Type: application/json', 'Authorization: ApiKey {}'.format(API_KEY)])
+    c.setopt(c.URL, 'https://{}:9200/{}{}'.format(EL_HOST,elastic_actions[ACTION],AUGMENT))
+    c.setopt(c.WRITEFUNCTION, response.write)
 
-  c.perform()
-  c.close()
-  print(response.getvalue().decode())
-  response.close()
+    c.perform()
+    c.close()
+    print(response.getvalue().decode())
+    response.close()
 
