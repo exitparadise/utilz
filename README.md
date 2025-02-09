@@ -12,3 +12,5 @@ EOF
 
 . setenvs.sh
 ```
+
+### elastic api key permissions
