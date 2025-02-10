@@ -3,6 +3,8 @@
 
 import argparse, requests, json, os, sys, re
 
+requests.packages.urllib3.disable_warnings() 
+
 parser = argparse.ArgumentParser(description="Elastic Agent Management Utility")
 
 subparsers = parser.add_subparsers(dest="cmd")
@@ -22,8 +24,8 @@ parser_agent.add_argument("-f", "--full", action="store_true", help="when action
 args=parser.parse_args()
 
 VERIFY=False
-ELASTIC_HOST="elastic.host:9200"
-KIBANA_HOST="kibana.host:5601"
+ELASTIC_HOST="elastic-api:9200"
+KIBANA_HOST="kibana-api:5601"
 API_KEY=os.environ.get('ELASTIC_API_KEY')
 
 class txt:
